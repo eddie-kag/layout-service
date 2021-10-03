@@ -1,6 +1,8 @@
 import ObjectModel from "@db/models/Object";
+import Polygon from "@db/types/Polygon";
 import { UniqueConstraintError } from "sequelize";
 import Coordinates from "./Coordinates";
+import DEFAULT_SRID from "./DefaultSrid";
 
 export interface Object {
     id: string,
@@ -14,9 +16,14 @@ export const createObject = async (object: {id: string, name: string, roomId: st
     try {
         const wrappedCoordinates = []
         wrappedCoordinates.push(coordinates)
+
         const room = await ObjectModel.create({
             id, name, roomId,
-            coordinates: {type: 'Polygon', coordinates: wrappedCoordinates}
+            coordinates: {
+                type: 'Polygon', 
+                coordinates: wrappedCoordinates, 
+                crs: DEFAULT_SRID
+            }
         })
 
         return modelToInterface(room)
@@ -34,7 +41,7 @@ export const getObject = async (id: string) => {
     return object ? modelToInterface(object) : undefined
 }
 
-function modelToInterface(object: ObjectModel) {
+function modelToInterface(object: ObjectModel):Object {
     return {
         id: object.id,
         name: object.name,

@@ -1,6 +1,7 @@
 import RoomModel from "@db/models/Room";
 import { UniqueConstraintError } from "sequelize";
 import Coordinates from "./Coordinates";
+import DEFAULT_SRID from "./DefaultSrid";
 
 export interface Room {
     id: string,
@@ -13,9 +14,20 @@ export const createRoom = async (room: {id: string, name: string, coordinates: C
     try {
         const wrappedCoordinates = []
         wrappedCoordinates.push(coordinates)
+
+        const coordinatesColumn = {
+            type: 'Polygon', 
+            coordinates: wrappedCoordinates, 
+            crs: {
+                type: 'Polygon', 
+                coordinates: wrappedCoordinates, 
+                crs: DEFAULT_SRID
+            }
+        }
+
         const room = await RoomModel.create({
             id, name, 
-            coordinates: {type: 'Polygon', coordinates: wrappedCoordinates}
+            coordinates: coordinatesColumn
         })
 
         return modelToInterface(room)
