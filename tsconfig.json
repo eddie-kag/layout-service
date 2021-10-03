@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "outDir": "build",
+      "strict": true,
+      "baseUrl": "./" ,
+      "esModuleInterop": true,
+      "experimentalDecorators": true,       
+      "emitDecoratorMetadata": true,        
+      "skipLibCheck": true ,
+      "forceConsistentCasingInFileNames": true,
+      "paths": {
+        "@api/*": [
+            "src/api/*"
+        ],
+        "@config/*": ["src/config/*"],
+        "@controllers/*": ["src/controllers/*"],
+        "@db/*": ["src/db/*"],
+        "@models/*": [
+            "src/db/models/*"
+        ],
+          "@routes/*": [
+            "src/routes/*"
+        ],
+        "@shared/*": [
+            "src/shared/*"
+        ]
+      }
+    },
+    "include": ["src/**/*.ts"]
+  }
+  
