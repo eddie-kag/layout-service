@@ -2,7 +2,7 @@ import config from "@config/config"
 import logger from "@shared/logger"
 import { Sequelize } from "sequelize-typescript"
 
-export const SCHEMA = 'layout-service'
+export const SCHEMA = 'layout_service'
 
 const db = new Sequelize({
   dialect: 'postgres',

@@ -1,10 +1,9 @@
-import { Request, Response, Router } from "express";
-import { StatusCodes } from "http-status-codes";
+import { createClient, getClient } from "@controllers/controllers";
+import { Router } from "express";
 
 const router = Router()
 
-router.get('/ping', (req: Request, res: Response) => {
-    res.status(StatusCodes.OK).send('pong')
-})
+router.post('/clients', createClient)
+router.get('/clients/:id', getClient)
 
 export default router

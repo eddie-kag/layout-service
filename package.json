@@ -39,6 +39,7 @@
     "module-alias": "^2.2.2",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
+    "runtypes": "^6.4.1",
     "sequelize": "^6.6.5",
     "sequelize-typescript": "^2.1.0"
   },
