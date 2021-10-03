@@ -1,4 +1,3 @@
-import { Coordinates } from '@controllers/common/Coordinates'
 import { SCHEMA } from '@db/db'
 import Polygon from '@db/types/Polygon'
 import {
