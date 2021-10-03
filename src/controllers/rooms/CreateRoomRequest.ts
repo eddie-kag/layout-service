@@ -3,8 +3,7 @@ import { Coordinates } from '@controllers/common/Coordinates'
 
 export const CreateRoomRequest = Record({
     id: String,
-    name: String,
-    coordinates: Coordinates
+    name: String
 })
 
 export type CreateRoomRequest = Static<

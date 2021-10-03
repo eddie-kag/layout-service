@@ -1,36 +1,14 @@
 import RoomModel from "@db/models/Room";
 import { UniqueConstraintError } from "sequelize";
-import Coordinates from "./Coordinates";
-import DEFAULT_SRID from "./DefaultSrid";
 
 export interface Room {
     id: string,
-    name: string, 
-    coordinates: Coordinates
+    name: string
 }
 
-export const createRoom = async (room: {id: string, name: string, coordinates: Coordinates}): Promise<Room | 'exists'> => {
-    const {id, name, coordinates} = room
+export const createRoom = async (room: {id: string, name: string}): Promise<Room | 'exists'> => {
     try {
-        const wrappedCoordinates = []
-        wrappedCoordinates.push(coordinates)
-
-        const coordinatesColumn = {
-            type: 'Polygon', 
-            coordinates: wrappedCoordinates, 
-            crs: {
-                type: 'Polygon', 
-                coordinates: wrappedCoordinates, 
-                crs: DEFAULT_SRID
-            }
-        }
-
-        const room = await RoomModel.create({
-            id, name, 
-            coordinates: coordinatesColumn
-        })
-
-        return modelToInterface(room)
+        return await RoomModel.create(room)
     } catch (error) {
         if (error instanceof UniqueConstraintError) {
             return 'exists'
@@ -41,14 +19,5 @@ export const createRoom = async (room: {id: string, name: string, coordinates: C
 }
 
 export const getRoom = async (id: string) => {
-    const room = await RoomModel.findByPk(id)
-    return room ? modelToInterface(room) : undefined
-}
-
-function modelToInterface(room: RoomModel) {
-    return {
-        id: room.id,
-        name: room.name,
-        coordinates: room.coordinates.coordinates
-    }
+    return await RoomModel.findByPk(id)
 }
