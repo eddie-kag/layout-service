@@ -58,7 +58,7 @@ export const intersects = async (roomId: string, coordinates: Coordinates) => {
     const query = `select * from layout_service.object where 
         room_id = :room_id 
         and 
-        ST_WITHIN(ST_GeomFromText(:geometry_text)::geometry, object.coordinates)`
+        ST_INTERSECTS(ST_GeomFromText(:geometry_text)::geometry, object.coordinates)`
     return await db.query(query, {
         replacements: { room_id: roomId, geometry_text: geometryText},
         model: ObjectModel,
