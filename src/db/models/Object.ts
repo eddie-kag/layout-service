@@ -8,11 +8,14 @@ import {
   DataType,
 } from 'sequelize-typescript'
 
-@Table({ schema: SCHEMA, tableName: 'room' })
-export default class RoomModel extends Model {
+@Table({ schema: SCHEMA, tableName: 'object' })
+export default class ObjectModel extends Model {
   @PrimaryKey
   @Column
   id!: string
+
+  @Column
+  roomId!: string
 
   @Column
   name!: string

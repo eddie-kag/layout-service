@@ -1,22 +1,20 @@
-import { default as RoomModel } from "@db/models/Room";
+import RoomModel from "@db/models/Room";
 import { UniqueConstraintError } from "sequelize";
-
-type Coordinates = number[][]
+import Coordinates from "./Coordinates";
 
 export interface Room {
     id: string,
     name: string, 
-    clientId: string,
     coordinates: Coordinates
 }
 
-export const createRoom = async (room: {id: string, name: string, clientId: string, coordinates: Coordinates}): Promise<Room | 'exists'> => {
-    const {id, name, clientId, coordinates} = room
+export const createRoom = async (room: {id: string, name: string, coordinates: Coordinates}): Promise<Room | 'exists'> => {
+    const {id, name, coordinates} = room
     try {
         const wrappedCoordinates = []
         wrappedCoordinates.push(coordinates)
         const room = await RoomModel.create({
-            id, name, clientId,
+            id, name, 
             coordinates: {type: 'Polygon', coordinates: wrappedCoordinates}
         })
 
@@ -39,7 +37,6 @@ function modelToInterface(room: RoomModel) {
     return {
         id: room.id,
         name: room.name,
-        clientId: room.clientId,
         coordinates: room.coordinates.coordinates
     }
 }

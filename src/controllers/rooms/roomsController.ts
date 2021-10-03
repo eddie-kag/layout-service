@@ -7,8 +7,8 @@ import { CreateRoomRequest } from "./CreateRoomRequest";
 export const createRoom = (req: Request, res: Response) => {
     const validation = CreateRoomRequest.validate(req.body)
     if (validation.success) {
-        const {id, name, clientId, coordinates} = validation.value
-        createRoomApi({id, name, clientId, coordinates}).then((room: Room|'exists') => {
+        const createRoomRequest = validation.value
+        createRoomApi(createRoomRequest).then((room: Room|'exists') => {
             if (room === 'exists') {
                 res.status(StatusCodes.CONFLICT).json({error: 'Room already exists.'})
             } else {
