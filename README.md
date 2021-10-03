@@ -2,7 +2,7 @@
 
 ## Overview
 
-This REST service is responsbile for `room` and `object` resources, where unique `object`s are contained within unique `room`s and no `object`s' bounding coordinates can intersect with anothers. 
+This REST service is responsbile for `room` and `object` resources, where unique objects are contained within unique rooms and no objects' bounding coordinates can intersect with anothers (ie. no two objects can touch).
 
 For more information on the functionality exposed, see the openapi file.
 

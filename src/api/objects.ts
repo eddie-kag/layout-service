@@ -47,7 +47,18 @@ export const getObject = async (id: string) => {
     return object ? modelToObject(object) : undefined
 }
 
-export const intersects = async (roomId: string, coordinates: Coordinates) => {
+export const getObjects = async (roomId: string) => {
+    const objects = await ObjectModel.findAll({
+        where: {
+            roomId
+        }
+    })
+
+
+    return objects ? objects.map(object => modelToObject(object)) : []
+}
+
+ async function intersects(roomId: string, coordinates: Coordinates){
     let coordinatesString = ''
     for (const coordinate of coordinates) {
         coordinatesString = `${coordinatesString} ${coordinate[0]} ${coordinate[1]},`

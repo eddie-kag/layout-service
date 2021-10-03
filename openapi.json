@@ -26,7 +26,7 @@
         },
         "responses": {
           "201": {
-            "description": "Room successfully retrieved.",
+            "description": "Room successfully created.",
             "content": {
               "application/json": {
                 "schema": {
@@ -84,7 +84,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Object successfully retrieved.",
+            "description": "Room successfully retrieved.",
             "content": {
               "application/json": {
                 "schema": {
@@ -124,7 +124,7 @@
         },
         "responses": {
           "201": {
-            "description": "Object successfully retrieved.",
+            "description": "Object successfully created.",
             "content": {
               "application/json": {
                 "schema": {
@@ -147,6 +147,55 @@
           },
           "409": {
             "description": "Object conflicts with existing object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericError"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Gets objects within a room.",
+        "parameters": [
+          {
+            "required": true,
+            "in": "query",
+            "name": "roomId",
+            "description": "The room ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Objects successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
             "content": {
               "application/json": {
                 "schema": {

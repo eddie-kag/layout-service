@@ -1,4 +1,4 @@
-import { createObject as createObjectApi, getObject as getObjectApi, Object } from "@api/objects";
+import { createObject as createObjectApi, getObject as getObjectApi, getObjects as getObjectsApi, Object } from "@api/objects";
 import logger from "@shared/logger";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -39,6 +39,22 @@ export const getObject = (req: Request, res: Response) => {
         } else {
             res.status(StatusCodes.NOT_FOUND).end()   
         }
+    }).catch((error) => {
+        logger.err(error, true)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error: error.message})
+    })
+}
+
+
+export const getObjects = (req: Request, res: Response) => {
+    const roomId = <string>req.query.roomId
+    if (!roomId) {
+        res.status(StatusCodes.BAD_REQUEST).json({error: 'Query parameter "roomId" is required.'})
+        return
+    }
+
+    getObjectsApi(roomId).then((objects) => {
+        res.status(StatusCodes.OK).json(objects)
     }).catch((error) => {
         logger.err(error, true)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error: error.message})
