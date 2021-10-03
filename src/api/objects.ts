@@ -1,5 +1,5 @@
+import db from "@db/db";
 import ObjectModel from "@db/models/Object";
-import Polygon from "@db/types/Polygon";
 import { UniqueConstraintError } from "sequelize";
 import Coordinates from "./Coordinates";
 import DEFAULT_SRID from "./DefaultSrid";
@@ -11,8 +11,14 @@ export interface Object {
     coordinates: Coordinates
 }
 
-export const createObject = async (object: {id: string, name: string, roomId: string, coordinates: Coordinates}): Promise<Object | 'exists'> => {
+export const createObject = async (object: {id: string, name: string, roomId: string, coordinates: Coordinates}): Promise<Object | Object[] | 'exists'> => {
     const {id, name, roomId, coordinates} = object
+
+    const intersections = await intersects(roomId, coordinates)
+    if (intersections.length > 0) {
+        return intersections.map(intersection => modelToObject(intersection))
+    }
+
     try {
         const wrappedCoordinates = []
         wrappedCoordinates.push(coordinates)
@@ -26,7 +32,7 @@ export const createObject = async (object: {id: string, name: string, roomId: st
             }
         })
 
-        return modelToInterface(room)
+        return modelToObject(room)
     } catch (error) {
         if (error instanceof UniqueConstraintError) {
             return 'exists'
@@ -38,10 +44,29 @@ export const createObject = async (object: {id: string, name: string, roomId: st
 
 export const getObject = async (id: string) => {
     const object = await ObjectModel.findByPk(id)
-    return object ? modelToInterface(object) : undefined
+    return object ? modelToObject(object) : undefined
 }
 
-function modelToInterface(object: ObjectModel):Object {
+export const intersects = async (roomId: string, coordinates: Coordinates) => {
+    let coordinatesString = ''
+    for (const coordinate of coordinates) {
+        coordinatesString = `${coordinatesString} ${coordinate[0]} ${coordinate[1]},`
+    }
+    coordinatesString = coordinatesString.slice(1, coordinatesString.length - 1)
+    const geometryText = `POLYGON((${coordinatesString}))`
+
+    const query = `select * from layout_service.object where 
+        room_id = :room_id 
+        and 
+        ST_WITHIN(ST_GeomFromText(:geometry_text)::geometry, object.coordinates)`
+    return await db.query(query, {
+        replacements: { room_id: roomId, geometry_text: geometryText},
+        model: ObjectModel,
+        mapToModel: true,
+    })
+}
+
+function modelToObject(object: ObjectModel):Object {
     return {
         id: object.id,
         name: object.name,

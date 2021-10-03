@@ -8,10 +8,14 @@ export const createObject = (req: Request, res: Response) => {
     const validation = CreateObjectRequest.validate(req.body)
     if (validation.success) {
         const createObjectRequest = validation.value
-        console.log(validation)
-        createObjectApi(createObjectRequest).then((object: Object|'exists') => {
+        createObjectApi(createObjectRequest).then((object: Object|Object[]|'exists') => {
             if (object === 'exists') {
                 res.status(StatusCodes.CONFLICT).json({error: 'Object already exists.'})
+            } else if (Array.isArray(object)) {
+                res.status(StatusCodes.BAD_REQUEST).json({
+                    error: 'Object intersects with other objects in room.',
+                    objects: object
+                })
             } else {
                 res.status(StatusCodes.CREATED).json(object)
             }
