@@ -69,3 +69,18 @@ PORT=<_> POSTGRES_HOST=<_> POSTGRES_PORT=<_> POSTGRES_DB=<_> POSTGRES_USER=<_> P
 ```
 
 Note: All environment variables are required, the service will not start without them.
+
+## Running Integration Tests
+
+### Prerequisites
+
+Followed respective instructions for installing k6 locally at [k6](https://k6.io/docs/getting-started/installation/).
+
+## Run Tests
+
+To run the tests, ensure the app is running in a separate terminal (follow the above instructions for running locally).
+
+Then in another terminal execute, specifying the base URL to the service (for example `http://localhost:8080`):
+```sh
+BASE_URL=<_> npm run test:func
+```

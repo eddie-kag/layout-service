@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "build": "rm -Rf ./build && tsc --build",
-    "start:dev": "nodemon"
+    "start:dev": "nodemon",
+    "test:func": "k6 run k6/functional-test.js"
   },
   "repository": {
     "type": "git",

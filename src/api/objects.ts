@@ -1,6 +1,6 @@
 import db from "@db/db";
 import ObjectModel from "@db/models/Object";
-import { UniqueConstraintError } from "sequelize";
+import { ForeignKeyConstraintError, UniqueConstraintError } from "sequelize";
 import Coordinates from "./Coordinates";
 import DEFAULT_SRID from "./DefaultSrid";
 
@@ -8,10 +8,12 @@ export interface Object {
     id: string,
     name: string, 
     roomId: string,
+    createdAt: Date,
+    updatedAt: Date,
     coordinates: Coordinates
 }
 
-export const createObject = async (object: {id: string, name: string, roomId: string, coordinates: Coordinates}): Promise<Object | Object[] | 'exists'> => {
+export const createObject = async (object: {id: string, name: string, roomId: string, coordinates: Coordinates}): Promise<Object | Object[] | 'exists' | 'room-missing'> => {
     const {id, name, roomId, coordinates} = object
 
     const intersections = await intersects(roomId, coordinates)
@@ -36,6 +38,8 @@ export const createObject = async (object: {id: string, name: string, roomId: st
     } catch (error) {
         if (error instanceof UniqueConstraintError) {
             return 'exists'
+        } else if (error instanceof ForeignKeyConstraintError) {
+            return 'room-missing'
         } else {
             throw error
         }
@@ -82,6 +86,8 @@ function modelToObject(object: ObjectModel):Object {
         id: object.id,
         name: object.name,
         roomId: object.roomId,
+        createdAt: object.createdAt,
+        updatedAt: object.updatedAt,
         coordinates: object.coordinates.coordinates
     }
 }
