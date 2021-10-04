@@ -243,7 +243,7 @@
             }
           },
           "404": {
-            "description": "Room not found."
+            "description": "Object not found."
           },
           "default": {
             "description": "Unexpected error",
